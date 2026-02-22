@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRACELESS | Quantum-Secure Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
+        body { font-family: 'Space+Grotesk', sans-serif; background: #0a0a0a; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glow { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+        #qrcode img { margin: auto; border: 8px solid white; border-radius: 8px; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="mb-8 text-center">
+        <h1 class="text-4xl font-bold tracking-tighter text-purple-500">TRACELESS</h1>
+        <p class="text-gray-400 text-sm tracking-widest uppercase">PES UNIVERSITY • SHARED TERMINAL</p>
+    </div>
+
+    <div class="glass p-8 rounded-2xl w-full max-w-md text-center glow">
+        <h2 class="text-xl font-medium mb-2">Secure Authentication</h2>
+        <p class="text-gray-400 text-sm mb-6">Scan with your TRACELESS Mobile App to verify identity</p>
+
+        <div class="bg-white p-4 rounded-xl inline-block mb-6" id="qrcode"></div>
+
+        <div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden mb-6">
+            <div id="progress" class="bg-purple-500 h-full transition-all duration-1000 ease-linear" style="width: 100%"></div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="flex items-center justify-center space-x-2 text-xs text-gray-500">
+                <span class="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span>LATTICE-BASED (ML-KEM) ENCRYPTION ACTIVE</span>
+            </div>
+            <p class="text-[10px] text-gray-600 uppercase tracking-widest">Post-Quantum Standard NIST-768</p>
+        </div>
+    </div>
+
+    <div class="mt-8 text-center text-gray-500 max-w-xs">
+        <p class="text-xs italic">"This terminal leaves zero digital breadcrumbs. Session metadata is purged upon disconnect."</p>
+    </div>
+
+    <script>
+        const qrContainer = document.getElementById("qrcode");
+        const progressBar = document.getElementById("progress");
+        let timeLeft = 30;
+
+        // Function to generate a new unique "Challenge"
+        function generateNewQR() {
+            qrContainer.innerHTML = ""; // Clear old QR
+            const challengeID = "LATTICE_" + Math.random().toString(36).substring(7);
+            
+            new QRCode(qrContainer, {
+                text: challengeID,
+                width: 200,
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+            
+            console.log("New Challenge Generated:", challengeID);
+            timeLeft = 30;
+        }
+
+        // Timer logic for the 30-second refresh
+        setInterval(() => {
+            timeLeft--;
+            const percentage = (timeLeft / 30) * 100;
+            progressBar.style.width = percentage + "%";
+
+            if (timeLeft <= 0) {
+                generateNewQR();
+            }
+        }, 1000);
+
+        // Initial generation
+        generateNewQR();
+    </script>
+</body>
+</html>
